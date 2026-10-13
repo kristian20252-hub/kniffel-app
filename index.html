@@ -53,7 +53,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
             margin: 8px 0;
         }
 
@@ -139,7 +139,7 @@
 
         .scoreboard {
             width: 100%;
-            max-width: 350px;
+            max-width: 360px;
             margin: 5px auto;
             border-collapse: collapse;
             font-family: 'Segoe UI', Tahoma, sans-serif;
@@ -162,6 +162,12 @@
             text-align: center;
         }
 
+        .scoreboard tr.summary-row {
+            background: #25253e;
+            font-weight: bold;
+            color: #d4af37;
+        }
+
         .scoreboard td:last-child {
             text-align: center;
             font-weight: bold;
@@ -177,7 +183,7 @@
         }
 
         .category-row.filled {
-            color: #6c757d;
+            color: #8a8f9d;
             cursor: not-allowed;
             background: #171722;
         }
@@ -196,7 +202,7 @@
     
     <div class="butler-container">
         <div class="butler-avatar" id="butler">🤵‍♂️</div>
-        <div class="speech-bubble" id="dialogue">Würfeln Sie bis zu 3 Mal und wählen Sie eine Kategorie auf der Tafel.</div>
+        <div class="speech-bubble" id="dialogue">Würfeln Sie bis zu 3 Mal und wählen Sie eine freie Kategorie auf dem Zettel.</div>
     </div>
 
     <div class="game-area">
@@ -215,11 +221,11 @@
 
     <button id="actionBtn" class="btn" onclick="rollDice()">Becher schütteln lassen</button>
 
-    <!-- Kniffel Wertungsblock -->
+    <!-- Kniffel Spielzettel -->
     <table class="scoreboard" id="scoreTable">
         <thead>
             <tr>
-                <th>Kategorie</th>
+                <th>Oberer Teil</th>
                 <th>Punkte</th>
             </tr>
         </thead>
@@ -230,13 +236,25 @@
             <tr class="category-row" onclick="selectCategory('fours')" id="row-fours"><td>4er (Vierer)</td><td id="score-fours">-</td></tr>
             <tr class="category-row" onclick="selectCategory('fives')" id="row-fives"><td>5er (Fünfer)</td><td id="score-fives">-</td></tr>
             <tr class="category-row" onclick="selectCategory('sixes')" id="row-sixes"><td>6er (Sechser)</td><td id="score-sixes">-</td></tr>
+            <tr class="summary-row"><td>Bonus (bei ≥63 Pkt: +35)</td><td id="score-bonus">0</td></tr>
+            <tr class="summary-row"><td>Summe Oberer Teil</td><td id="score-upperTotal">0</td></tr>
+        </tbody>
+        <thead>
+            <tr>
+                <th>Unterer Teil</th>
+                <th>Punkte</th>
+            </tr>
+        </thead>
+        <tbody>
             <tr class="category-row" onclick="selectCategory('threeOfAKind')" id="row-threeOfAKind"><td>3er-Pasch (alle Augen)</td><td id="score-threeOfAKind">-</td></tr>
             <tr class="category-row" onclick="selectCategory('fourOfAKind')" id="row-fourOfAKind"><td>4er-Pasch (alle Augen)</td><td id="score-fourOfAKind">-</td></tr>
             <tr class="category-row" onclick="selectCategory('fullHouse')" id="row-fullHouse"><td>Full House (25 Pkt)</td><td id="score-fullHouse">-</td></tr>
             <tr class="category-row" onclick="selectCategory('smallStraight')" id="row-smallStraight"><td>Kleine Straße (30 Pkt)</td><td id="score-smallStraight">-</td></tr>
             <tr class="category-row" onclick="selectCategory('largeStraight')" id="row-largeStraight"><td>Große Straße (40 Pkt)</td><td id="score-largeStraight">-</td></tr>
             <tr class="category-row" onclick="selectCategory('kniffel')" id="row-kniffel"><td>Kniffel (50 Pkt)</td><td id="score-kniffel">-</td></tr>
-            <tr class="category-row" onclick="selectCategory('chance')" id="row-chance"><td>Chance (Summe)</td><td id="score-chance">-</td></tr>
+            <tr class="category-row" onclick="selectCategory('chance')" id="row-chance"><td>Chance (alle Augen)</td><td id="score-chance">-</td></tr>
+            <tr class="summary-row"><td>Summe Unterer Teil</td><td id="score-lowerTotal">0</td></tr>
+            <tr class="summary-row" style="background:#1b3820; color:#d4af37;"><td>GESAMTSUMME</td><td id="score-grandTotal">0</td></tr>
         </tbody>
     </table>
 
@@ -251,7 +269,8 @@
         let hasRolled = false;
         let turnFinished = false;
 
-        let scores = {
+        // Speicherstand laden oder neu initialisieren
+        let scores = JSON.parse(localStorage.getItem("kniffel_scores")) || {
             ones: null, twos: null, threes: null, fours: null, fives: null, sixes: null,
             threeOfAKind: null, fourOfAKind: null, fullHouse: null, smallStraight: null,
             largeStraight: null, kniffel: null, chance: null
@@ -262,6 +281,21 @@
             threeOfAKind: "3er-Pasch", fourOfAKind: "4er-Pasch", fullHouse: "Full House",
             smallStraight: "Kleine Straße", largeStraight: "Große Straße", kniffel: "Kniffel", chance: "Chance"
         };
+
+        // Bisherige Werte beim Start laden
+        window.onload = function() {
+            renderStoredScores();
+        };
+
+        function renderStoredScores() {
+            for (let cat in scores) {
+                if (scores[cat] !== null) {
+                    document.getElementById(`score-${cat}`).innerText = scores[cat];
+                    document.getElementById(`row-${cat}`).classList.add("filled");
+                }
+            }
+            recalculateTotals();
+        }
 
         function toggleLock(index) {
             if (!hasRolled || rollsLeft === 3 || turnFinished) return;
@@ -300,9 +334,9 @@
 
                 if (rollsLeft === 0) {
                     document.getElementById("actionBtn").disabled = true;
-                    document.getElementById("dialogue").innerText = "Keine Würfe mehr! Bitte wählen Sie eine Kategorie auf der Tafel.";
+                    document.getElementById("dialogue").innerText = "Keine Würfe mehr! Bitte wählen Sie eine freie Kategorie auf dem Zettel.";
                 } else {
-                    document.getElementById("dialogue").innerText = "Tippen Sie auf Würfel zum Halten und wählen Sie links Ihre Kategorie.";
+                    document.getElementById("dialogue").innerText = "Tippen Sie auf Würfel zum Halten und wählen Sie eine Kategorie.";
                 }
             }, 500);
         }
@@ -364,6 +398,28 @@
             }
         }
 
+        function recalculateTotals() {
+            const upperCategories = ['ones', 'twos', 'threes', 'fours', 'fives', 'sixes'];
+            let upperSum = 0;
+            upperCategories.forEach(cat => upperSum += (scores[cat] || 0));
+
+            const bonus = upperSum >= 63 ? 35 : 0;
+            const upperTotal = upperSum + bonus;
+
+            const lowerCategories = ['threeOfAKind', 'fourOfAKind', 'fullHouse', 'smallStraight', 'largeStraight', 'kniffel', 'chance'];
+            let lowerTotal = 0;
+            lowerCategories.forEach(cat => lowerTotal += (scores[cat] || 0));
+
+            const grandTotal = upperTotal + lowerTotal;
+
+            document.getElementById('score-bonus').innerText = bonus;
+            document.getElementById('score-upperTotal').innerText = upperTotal;
+            document.getElementById('score-lowerTotal').innerText = lowerTotal;
+            document.getElementById('score-grandTotal').innerText = grandTotal;
+
+            return grandTotal;
+        }
+
         function selectCategory(category) {
             if (!hasRolled || scores[category] !== null || turnFinished) return;
 
@@ -371,16 +427,21 @@
             scores[category] = finalScore;
             turnFinished = true;
 
+            // In LocalStorage speichern
+            localStorage.setItem("kniffel_scores", JSON.stringify(scores));
+
             document.getElementById(`score-${category}`).innerText = finalScore;
             document.getElementById(`score-${category}`).className = "";
             document.getElementById(`row-${category}`).classList.add("filled");
 
-            document.getElementById("dialogue").innerText = `Ausgezeichnet! ${finalScore} Punkte bei ${categoryNames[category]} eingetragen.`;
+            const grandTotal = recalculateTotals();
+
+            document.getElementById("dialogue").innerText = `Ausgezeichnet! ${finalScore} Pkt bei ${categoryNames[category]} eingetragen.`;
             
-            setTimeout(() => sendResultToGroup(category, finalScore), 800);
+            setTimeout(() => sendResultToGroup(category, finalScore, grandTotal), 800);
         }
 
-        function sendResultToGroup(category, categoryScore) {
+        function sendResultToGroup(category, categoryScore, grandTotal) {
             const botToken = "8954931011:AAFBlifNuSof0tMZhPIHXFtd04uCpZShWpI";
             const chatId = "-1004435270880";
 
@@ -394,7 +455,7 @@
 
             const catName = categoryNames[category] || category;
 
-            const text = `🎯 **${userName}** hat seinen Zug beendet:\n\n🎲 Würfel: ${diceSymbols}\n📌 **Kategorie:** ${catName} (${categoryScore} Punkte)`;
+            const text = `🎯 **${userName}** hat gewürfelt:\n\n🎲 Würfel: ${diceSymbols}\n📌 **Eingetragen:** ${catName} (${categoryScore} Pkt)\n🏆 **Gesamtstand:** ${grandTotal} Punkte`;
 
             fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
                 method: "POST",
