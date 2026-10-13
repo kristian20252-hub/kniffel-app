@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KohiGameBot - 3D/2D Kniffel</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1e1e2f, #2b2d31);
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 90vh;
+        }
+        h2 { margin: 10px 0; color: #f1c40f; }
+        .cup-container {
+            font-size: 90px;
+            margin: 10px 0;
+            transition: transform 0.2s ease;
+        }
+        .shaking {
+            animation: shake 0.5s ease infinite;
+        }
+        @keyframes shake {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            20% { transform: translate(-15px, 5px) rotate(-15deg); }
+            40% { transform: translate(15px, -5px) rotate(15deg); }
+            60% { transform: translate(-10px, 5px) rotate(-10deg); }
+            80% { transform: translate(10px, -5px) rotate(10deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+        .dice-container {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 20px 0;
+        }
+        .die {
+            width: 55px;
+            height: 55px;
+            background: white;
+            color: #333;
+            font-size: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+            user-select: none;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        .die.locked {
+            background: #e74c3c;
+            color: white;
+            transform: translateY(-8px);
+        }
+        .info-text {
+            font-size: 16px;
+            color: #bdc3c7;
+            margin: 5px 0;
+        }
+        .btn {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            font-size: 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(46, 204, 113, 0.4);
+            width: 100%;
+            margin-top: 10px;
+        }
+        .btn:active { background-color: #27ae60; }
+        .btn:disabled { background-color: #7f8c8d; cursor: not-allowed; box-shadow: none; }
+    </style>
+</head>
+<body>
+
+    <div>
+        <h2>🎲 KohiGameBot Kniffel 3D</h2>
+        <div class="info-text" id="statusText">Drücke auf den Becher oder den Button zum Würfeln!</div>
+    </div>
+    
+    <!-- Der animierte Würfelbecher -->
+    <div id="cup" class="cup-container" onclick="rollDice()">🏺</div>
+    
+    <!-- Die 5 Würfel -->
+    <div class="dice-container" id="diceContainer">
+        <div class="die locked" onclick="toggleLock(0)">❓</div>
+        <div class="die locked" onclick="toggleLock(1)">❓</div>
+        <div class="die locked" onclick="toggleLock(2)">❓</div>
+        <div class="die locked" onclick="toggleLock(3)">❓</div>
+        <div class="die locked" onclick="toggleLock(4)">❓</div>
+    </div>
+
+    <div>
+        <div class="info-text" id="rollsLeft">Verbleibende Würfe: 3</div>
+        <button id="actionBtn" class="btn" onclick="rollDice()">Becher schütteln & Würfeln</button>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        const faces = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
+        let diceValues = [1, 1, 1, 1, 1];
+        let locked = [false, false, false, false, false];
+        let rollsLeft = 3;
+        let hasRolled = false;
+
+        function toggleLock(index) {
+            if (!hasRolled || rollsLeft === 3) return; // Vor dem ersten Wurf kann man nichts halten
+            locked[index] = !locked[index];
+            renderDice();
+        }
+
+        function rollDice() {
+            if (rollsLeft <= 0) return;
+
+            const cup = document.getElementById("cup");
+            cup.classList.add("shaking");
+            document.getElementById("actionBtn").disabled = true;
+
+            setTimeout(() => {
+                cup.classList.remove("shaking");
+                
+                for (let i = 0; i < 5; i++) {
+                    if (!locked[i] || !hasRolled) {
+                        diceValues[i] = Math.floor(Math.random() * 6) + 1;
+                    }
+                }
+
+                hasRolled = true;
+                rollsLeft--;
+                
+                // Nach erstem Wurf alle standardmäßig entsperren, damit Spieler wählen kann
+                if (rollsLeft === 2) {
+                    locked = [false, false, false, false, false];
+                }
+
+                renderDice();
+                document.getElementById("actionBtn").disabled = false;
+
+                if (rollsLeft === 0) {
+                    document.getElementById("actionBtn").innerText = "Ergebnis an Gruppe senden";
+                    document.getElementById("actionBtn").onclick = finishTurn;
+                    document.getElementById("statusText").innerText = "Zug beendet! Klicke auf den Button.";
+                } else {
+                    document.getElementById("actionBtn").innerText = "Erneut würfeln";
+                    document.getElementById("statusText").innerText = "Klicke auf Würfel, um sie zu halten (rot).";
+                }
+                
+                document.getElementById("rollsLeft").innerText = `Verbleibende Würfe: ${rollsLeft}`;
+            }, 600);
+        }
+
+        function renderDice() {
+            const container = document.getElementById("diceContainer");
+            container.innerHTML = "";
+            for (let i = 0; i < 5; i++) {
+                const die = document.createElement("div");
+                die.className = `die ${locked[i] ? 'locked' : ''}`;
+                die.innerHTML = faces[diceValues[i] - 1];
+                die.onclick = () => toggleLock(i);
+                container.appendChild(die);
+            }
+        }
+
+        function finishTurn() {
+            const sum = diceValues.reduce((a, b) => a + b, 0);
+            const data = {
+                dice: diceValues,
+                sum: sum
+            };
+            tg.sendData(JSON.stringify(data));
+            tg.close();
+        }
+    </script>
+</body>
+</html>
