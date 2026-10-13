@@ -3,87 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KohiGameBot - Kniffel Butler</title>
+    <title>Sir James Kniffel Salon</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         body {
-            background: linear-gradient(135deg, #1a1a24, #2d2b38);
+            background: linear-gradient(135deg, #161622, #242235);
             color: #f8f9fa;
             font-family: 'Georgia', serif;
             text-align: center;
             margin: 0;
-            padding: 20px;
+            padding: 15px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            height: 90vh;
-        }
-        
-        .header {
-            margin-top: 10px;
+            height: 92vh;
+            box-sizing: border-box;
         }
         
         h2 { 
             margin: 5px 0; 
             color: #d4af37; 
-            font-size: 24px;
+            font-size: 22px;
             letter-spacing: 1px;
         }
 
-        /* Butler-Animation & Bereich */
+        /* Butler-Bereich mit dynamischer Sprechblase */
         .butler-container {
             position: relative;
-            margin: 10px auto;
+            margin: 5px auto;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        .butler-avatar {
-            font-size: 65px;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
-            transition: transform 0.3s ease;
-        }
-
         .speech-bubble {
             background: #ffffff;
             color: #2c3e50;
-            padding: 10px 16px;
-            border-radius: 18px;
-            font-size: 14px;
-            font-family: 'Segoe UI', sans-serif;
+            padding: 10px 14px;
+            border-radius: 16px;
+            font-size: 13px;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
             font-weight: 600;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            margin-bottom: 12px;
-            max-width: 250px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            margin-bottom: 10px;
+            max-width: 270px;
             position: relative;
         }
 
         .speech-bubble::after {
             content: '';
             position: absolute;
-            bottom: -8px;
+            bottom: -7px;
             left: 50%;
             transform: translateX(-50%);
-            border-width: 8px 8px 0;
+            border-width: 7px 7px 0;
             border-style: solid;
             border-color: #ffffff transparent;
             display: block;
             width: 0;
         }
 
-        /* Würfelbecher aus edlem Holz/Leder */
+        .butler-avatar {
+            font-size: 55px;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));
+            transition: transform 0.3s ease;
+        }
+
+        /* Eleganter Leder-Würfelbecher */
         .cup-container {
-            width: 85px;
-            height: 110px;
-            background: linear-gradient(135deg, #6d3811, #3b1d07);
+            width: 80px;
+            height: 105px;
+            background: linear-gradient(135deg, #703812, #3b1d07);
             margin: 10px auto;
-            border-radius: 8px 8px 30px 30px;
-            box-shadow: inset 0 8px 10px rgba(255,255,255,0.2), 0 10px 20px rgba(0,0,0,0.6);
+            border-radius: 6px 6px 30px 30px;
+            box-shadow: inset 0 6px 10px rgba(255,255,255,0.25), 0 8px 16px rgba(0,0,0,0.6);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px;
+            font-size: 30px;
             cursor: pointer;
             border: 3px solid #231104;
             position: relative;
@@ -93,7 +90,7 @@
             content: '';
             position: absolute;
             top: -6px;
-            width: 91px;
+            width: 86px;
             height: 14px;
             background: #8b4513;
             border-radius: 50%;
@@ -113,26 +110,26 @@
             100% { transform: translate(0, 0) rotate(0deg); }
         }
 
-        /* Würfel-Design */
+        /* Die 5 Würfel */
         .dice-container {
             display: flex;
             justify-content: center;
-            gap: 10px;
-            margin: 15px 0;
+            gap: 8px;
+            margin: 10px 0;
         }
 
         .die {
-            width: 52px;
-            height: 52px;
+            width: 50px;
+            height: 50px;
             background: #ffffff;
-            color: #1a1a24;
-            font-size: 30px;
+            color: #161622;
+            font-size: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 12px;
+            border-radius: 10px;
             cursor: pointer;
-            box-shadow: 0 5px 10px rgba(0,0,0,0.4);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
             user-select: none;
             transition: transform 0.2s, background-color 0.2s, color 0.2s;
         }
@@ -140,30 +137,31 @@
         .die.locked {
             background: #c0392b;
             color: #ffffff;
-            transform: translateY(-8px);
-            box-shadow: 0 8px 15px rgba(192, 57, 43, 0.5);
+            transform: translateY(-6px);
+            box-shadow: 0 6px 12px rgba(192, 57, 43, 0.5);
         }
 
         .info-text {
-            font-size: 14px;
+            font-size: 13px;
             color: #a0a5b5;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            margin: 4px 0;
         }
 
         /* Edler Gold-Button */
         .btn {
             background: linear-gradient(135deg, #d4af37, #aa820a);
-            color: #1a1a24;
+            color: #161622;
             border: none;
-            padding: 14px 20px;
-            font-size: 17px;
-            border-radius: 12px;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 10px;
             cursor: pointer;
             font-weight: bold;
-            font-family: 'Segoe UI', sans-serif;
-            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
             width: 100%;
-            margin-top: 10px;
+            margin-top: 5px;
         }
 
         .btn:active { background: #aa820a; }
@@ -172,20 +170,20 @@
 </head>
 <body>
 
-    <div class="header">
-        <h2>🤵 Sir James Kniffel Salon</h2>
+    <div>
+        <h2>🤵 Sir James Salon</h2>
     </div>
     
-    <!-- Butler & Sprechblase -->
+    <!-- Butler mit Sprechblase -->
     <div class="butler-container">
-        <div class="speech-bubble" id="dialogue">Sehr wohl, der Herr! Ich habe die Würfel für Sie bereitgestellt.</div>
+        <div class="speech-bubble" id="dialogue">Sehr wohl, der Herr! Ich habe den Becher für Sie bereitgestellt.</div>
         <div class="butler-avatar" id="butler">🤵‍♂️</div>
     </div>
 
     <!-- Würfelbecher -->
     <div id="cup" class="cup-container" onclick="rollDice()">🎲</div>
     
-    <!-- Würfel -->
+    <!-- Die 5 Würfel -->
     <div class="dice-container" id="diceContainer">
         <div class="die" onclick="toggleLock(0)">⚀</div>
         <div class="die" onclick="toggleLock(1)">⚁</div>
@@ -214,9 +212,9 @@
             locked[index] = !locked[index];
             
             if (locked[index]) {
-                document.getElementById("dialogue").innerText = "Sehr wohl, diesen Würfel behalten wir auf dem Silbertablett.";
+                document.getElementById("dialogue").innerText = "Sehr wohl, diesen Würfel lege ich auf das Silbertablett.";
             } else {
-                document.getElementById("dialogue").innerText = "Wie Sie wünschen, wir werfen ihn erneut.";
+                document.getElementById("dialogue").innerText = "Wie Sie wünschen, dieser Würfel wandert zurück in den Becher.";
             }
 
             renderDice();
@@ -252,10 +250,10 @@
                 if (rollsLeft === 0) {
                     document.getElementById("actionBtn").innerText = "Ergebnis der Gruppe präsentieren";
                     document.getElementById("actionBtn").onclick = finishTurn;
-                    document.getElementById("dialogue").innerText = "Ausgezeichneter Wurf! Soll ich das Ergebnis übermitteln?";
+                    document.getElementById("dialogue").innerText = "Ausgezeichnet! Soll ich das Endergebnis übermitteln?";
                 } else {
                     document.getElementById("actionBtn").innerText = "Nochmals schütteln";
-                    document.getElementById("dialogue").innerText = "Tippen Sie auf die Würfel, die ich für Sie aufbewahren soll.";
+                    document.getElementById("dialogue").innerText = "Tippen Sie auf die Würfel, die Sie halten möchten (rot).";
                 }
                 
                 document.getElementById("rollsLeft").innerText = `Verbleibende Würfe: ${rollsLeft}`;
