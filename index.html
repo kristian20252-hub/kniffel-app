@@ -212,12 +212,11 @@
 
         const botToken = "8954931011:AAFBlifNuSof0tMZhPIHXFtd04uCpZShWpI";
 
-        // DYNAMISCHES AUSLESEN VON KATEGORIE & CHAT_ID
+        // VERBESSERTES ERKENNEN DES SPIELS (Egal ob Telegram start_param oder URL-Parameter)
         const urlParams = new URLSearchParams(window.location.search);
-        let currentGame = urlParams.get('game') || 'kniffel';
+        let currentGame = urlParams.get('game') || (tg.initDataUnsafe && tg.initDataUnsafe.start_param) || 'kniffel';
         
-        // Liest dynamisch die Chat-ID aus – funktioniert für jede Gruppe & den privaten Chat!
-        let targetChatId = urlParams.get('chat_id') || (window.Telegram.WebApp.initDataUnsafe?.chat?.id) || (window.Telegram.WebApp.initDataUnsafe?.user?.id);
+        let targetChatId = urlParams.get('chat_id') || (tg.initDataUnsafe?.chat?.id) || (tg.initDataUnsafe?.user?.id);
 
         window.onload = function() {
             switchGame(currentGame);
@@ -260,7 +259,7 @@
         let hasRolled = false;
         let turnFinished = false;
 
-        let scores = JSON.parse(localStorage.getItem("kniffel_scores_v7")) || {
+        let scores = JSON.parse(localStorage.getItem("kniffel_scores_v9")) || {
             ones: null, twos: null, threes: null, fours: null, fives: null, sixes: null,
             threeOfAKind: null, fourOfAKind: null, fullHouse: null, smallStraight: null,
             largeStraight: null, kniffel: null, chance: null
@@ -375,7 +374,7 @@
             scores[category] = finalScore;
             turnFinished = true;
 
-            localStorage.setItem("kniffel_scores_v7", JSON.stringify(scores));
+            localStorage.setItem("kniffel_scores_v9", JSON.stringify(scores));
             document.getElementById(`score-${category}`).innerText = finalScore;
             document.getElementById(`row-${category}`).classList.add("filled");
 
@@ -417,14 +416,13 @@
             sendResultToGroup(`🎩 **${currentGame.toUpperCase()}**\nEin Zug wurde erfolgreich ausgeführt!`);
         }
 
-        /* DYNAMISCHER VERSAND AN JEDE GRUPPE ODER PRIVATEN CHAT */
         function sendResultToGroup(extraText) {
             if (!targetChatId) return;
 
             let userName = "Spieler";
             try {
-                if (window.Telegram.WebApp.initDataUnsafe?.user?.first_name) {
-                    userName = window.Telegram.WebApp.initDataUnsafe.user.first_name;
+                if (tg.initDataUnsafe?.user?.first_name) {
+                    userName = tg.initDataUnsafe.user.first_name;
                 }
             } catch (e) {}
 
@@ -436,7 +434,7 @@
                 body: JSON.stringify({ chat_id: targetChatId, text: text, parse_mode: "Markdown" })
             })
             .then(res => res.json())
-            .then(data => { if (data.ok) try { window.Telegram.WebApp.close(); } catch (e) {} });
+            .then(data => { if (data.ok) try { tg.close(); } catch (e) {} });
         }
     </script>
 </body>
