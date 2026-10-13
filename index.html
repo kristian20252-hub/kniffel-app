@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Sir James Kniffel Salon</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
@@ -269,7 +272,7 @@
         let hasRolled = false;
         let turnFinished = false;
 
-        let scores = JSON.parse(localStorage.getItem("kniffel_scores_v4")) || {
+        let scores = JSON.parse(localStorage.getItem("kniffel_scores_v5")) || {
             ones: null, twos: null, threes: null, fours: null, fives: null, sixes: null,
             threeOfAKind: null, fourOfAKind: null, fullHouse: null, smallStraight: null,
             largeStraight: null, kniffel: null, chance: null
@@ -425,7 +428,7 @@
             scores[category] = finalScore;
             turnFinished = true;
 
-            localStorage.setItem("kniffel_scores_v4", JSON.stringify(scores));
+            localStorage.setItem("kniffel_scores_v5", JSON.stringify(scores));
 
             document.getElementById(`score-${category}`).innerText = finalScore;
             document.getElementById(`score-${category}`).className = "";
@@ -435,10 +438,10 @@
 
             document.getElementById("dialogue").innerText = `Ausgezeichnet! ${finalScore} Pkt bei ${categoryNames[category]} eingetragen.`;
             
-            setTimeout(() => sendResultToGroupV4(category, finalScore, grandTotal), 800);
+            setTimeout(() => sendResultToGroupV5(category, finalScore, grandTotal), 800);
         }
 
-        function sendResultToGroupV4(category, categoryScore, grandTotal) {
+        function sendResultToGroupV5(category, categoryScore, grandTotal) {
             const botToken = "8954931011:AAFBlifNuSof0tMZhPIHXFtd04uCpZShWpI";
             const chatId = "-1004435270880";
 
@@ -452,7 +455,7 @@
 
             const catName = categoryNames[category] || category;
 
-            const text = `🎯 **${userName}** hat gewürfelt:\n\n🎲 Würfel: ${diceSymbols}\n📌 **Eingetragen:** ${catName} (${categoryScore} Pkt)\n🏆 **Gesamtstand:** ${grandTotal} Punkte`;
+            const text = `🎯 **${userName}** hat seinen Spielzug beendet:\n\n🎲 Würfel: ${diceSymbols}\n📌 **Eingetragene Kategorie:** ${catName} (${categoryScore} Pkt)\n🏆 **Gesamtstand:** ${grandTotal} Punkte`;
 
             fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
                 method: "POST",
