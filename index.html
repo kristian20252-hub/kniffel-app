@@ -269,8 +269,9 @@
             const sum = diceValues.reduce((a, b) => a + b, 0);
             const botToken = "8954931011:AAFBlifNuSof0tMZhPIHXFtd04uCpZShWpI";
             
-            // Holt die Chat-ID direkt aus der Telegram-Umgebung (funktioniert in Gruppen & Privatchats)
-            const chatId = tg.initDataUnsafe?.chat?.id || tg.initDataUnsafe?.user?.id;
+            // Liest die Chat-ID aus dem URL-Parameter (chat_id) oder aus tg.initDataUnsafe
+            const urlParams = new URLSearchParams(window.location.search);
+            const chatId = urlParams.get("chat_id") || tg.initDataUnsafe?.chat?.id || tg.initDataUnsafe?.user?.id;
 
             if (!chatId) {
                 alert("Fehler: Chat-ID konnte nicht ermittelt werden.");
@@ -283,7 +284,7 @@
 
             const text = `🎯 **${userName}** hat gewürfelt:\n\nWürfel: ${diceDisplay}\nAugensumme: **${sum} Punkte**`;
 
-            // Sendet das Ergebnis direkt über die offizielle Telegram Bot API an den Chat
+            // Direktes Senden der Nachricht an den Gruppenchat per API
             fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -296,7 +297,7 @@
                 tg.close();
             }).catch(err => {
                 console.error(err);
-                alert("Fehler beim Senden des Ergebnisses an den Chat.");
+                alert("Fehler beim Senden des Ergebnisses.");
             });
         }
     </script>
