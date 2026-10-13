@@ -137,7 +137,6 @@
         .btn:active { background: #aa820a; }
         .btn:disabled { background: #4a4d5a; color: #888; cursor: not-allowed; box-shadow: none; }
 
-        /* Wertungsblock Tabelle */
         .scoreboard {
             width: 100%;
             max-width: 350px;
@@ -252,11 +251,16 @@
         let hasRolled = false;
         let turnFinished = false;
 
-        // Speicher für eingetragene Punkte
         let scores = {
             ones: null, twos: null, threes: null, fours: null, fives: null, sixes: null,
             threeOfAKind: null, fourOfAKind: null, fullHouse: null, smallStraight: null,
             largeStraight: null, kniffel: null, chance: null
+        };
+
+        const categoryNames = {
+            ones: "1er", twos: "2er", threes: "3er", fours: "4er", fives: "5er", sixes: "6er",
+            threeOfAKind: "3er-Pasch", fourOfAKind: "4er-Pasch", fullHouse: "Full House",
+            smallStraight: "Kleine Straße", largeStraight: "Große Straße", kniffel: "Kniffel", chance: "Chance"
         };
 
         function toggleLock(index) {
@@ -315,7 +319,6 @@
             }
         }
 
-        // Berechnet mögliche Punkte für Kategorien basierend auf aktuellen Würfeln
         function calculateScore(category, dice) {
             const counts = {};
             dice.forEach(d => counts[d] = (counts[d] || 0) + 1);
@@ -372,12 +375,12 @@
             document.getElementById(`score-${category}`).className = "";
             document.getElementById(`row-${category}`).classList.add("filled");
 
-            document.getElementById("dialogue").innerText = `Ausgezeichnet! ${finalScore} Punkte eingetragen. Übermittle Ergebnis...`;
+            document.getElementById("dialogue").innerText = `Ausgezeichnet! ${finalScore} Punkte bei ${categoryNames[category]} eingetragen.`;
             
-            setTimeout(sendResultToGroup, 800);
+            setTimeout(() => sendResultToGroup(category, finalScore), 800);
         }
 
-        function sendResultToGroup() {
+        function sendResultToGroup(category, categoryScore) {
             const botToken = "8954931011:AAFBlifNuSof0tMZhPIHXFtd04uCpZShWpI";
             const chatId = "-1004435270880";
 
@@ -389,10 +392,9 @@
                 }
             } catch (e) {}
 
-            // Gesamtsumme aller bisher eingetragenen Punkte berechnen
-            const totalScore = Object.values(scores).reduce((a, b) => a + (b || 0), 0);
+            const catName = categoryNames[category] || category;
 
-            const text = `🎯 **${userName}** hat seinen Zug beendet:\n\n🎲 Letzte Würfel: ${diceSymbols}\n🏆 **Gesamtpunktzahl:** ${totalScore} Punkte`;
+            const text = `🎯 **${userName}** hat seinen Zug beendet:\n\n🎲 Würfel: ${diceSymbols}\n📌 **Kategorie:** ${catName} (${categoryScore} Punkte)`;
 
             fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
                 method: "POST",
