@@ -269,8 +269,7 @@
         let hasRolled = false;
         let turnFinished = false;
 
-        // Speicherstand laden oder neu initialisieren
-        let scores = JSON.parse(localStorage.getItem("kniffel_scores")) || {
+        let scores = JSON.parse(localStorage.getItem("kniffel_scores_v4")) || {
             ones: null, twos: null, threes: null, fours: null, fives: null, sixes: null,
             threeOfAKind: null, fourOfAKind: null, fullHouse: null, smallStraight: null,
             largeStraight: null, kniffel: null, chance: null
@@ -426,7 +425,7 @@
             scores[category] = finalScore;
             turnFinished = true;
 
-            localStorage.setItem("kniffel_scores", JSON.stringify(scores));
+            localStorage.setItem("kniffel_scores_v4", JSON.stringify(scores));
 
             document.getElementById(`score-${category}`).innerText = finalScore;
             document.getElementById(`score-${category}`).className = "";
@@ -436,10 +435,10 @@
 
             document.getElementById("dialogue").innerText = `Ausgezeichnet! ${finalScore} Pkt bei ${categoryNames[category]} eingetragen.`;
             
-            setTimeout(() => sendResultToGroup(category, finalScore, grandTotal), 800);
+            setTimeout(() => sendResultToGroupV4(category, finalScore, grandTotal), 800);
         }
 
-        function sendResultToGroup(category, categoryScore, grandTotal) {
+        function sendResultToGroupV4(category, categoryScore, grandTotal) {
             const botToken = "8954931011:AAFBlifNuSof0tMZhPIHXFtd04uCpZShWpI";
             const chatId = "-1004435270880";
 
