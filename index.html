@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KohiGameBot - 3D/2D Kniffel</title>
+    <title>KohiGameBot - Kniffel 3D</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         body {
@@ -18,20 +18,20 @@
             justify-content: space-between;
             height: 90vh;
         }
-        h2 { margin: 10px 0; color: #f1c40f; }
+        h2 { margin: 5px 0; color: #f1c40f; }
         
-        /* Echter Würfelbecher als 3D-Zylinder Design */
+        /* Echter Leder-Würfelbecher (Zylinder) */
         .cup-container {
-            width: 100px;
-            height: 130px;
-            background: linear-gradient(135deg, #8b4513, #5c2d0c);
-            margin: 20px auto;
-            border-radius: 10px 10px 40px 40px;
-            box-shadow: inset 0 10px 15px rgba(255,255,255,0.2), 0 10px 20px rgba(0,0,0,0.5);
+            width: 90px;
+            height: 120px;
+            background: linear-gradient(135deg, #a0522d, #5c2d0c);
+            margin: 15px auto;
+            border-radius: 8px 8px 35px 35px;
+            box-shadow: inset 0 8px 12px rgba(255,255,255,0.25), 0 10px 20px rgba(0,0,0,0.6);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
+            font-size: 35px;
             cursor: pointer;
             border: 3px solid #3d1e05;
             transition: transform 0.2s ease;
@@ -40,10 +40,10 @@
         .cup-container::before {
             content: '';
             position: absolute;
-            top: -8px;
-            width: 106px;
-            height: 20px;
-            background: #a0522d;
+            top: -7px;
+            width: 96px;
+            height: 16px;
+            background: #b5651d;
             border-radius: 50%;
             border: 3px solid #3d1e05;
         }
@@ -63,8 +63,8 @@
         .dice-container {
             display: flex;
             justify-content: center;
-            gap: 12px;
-            margin: 20px 0;
+            gap: 10px;
+            margin: 15px 0;
         }
         .die {
             width: 55px;
@@ -87,7 +87,7 @@
             transform: translateY(-8px);
         }
         .info-text {
-            font-size: 16px;
+            font-size: 15px;
             color: #bdc3c7;
             margin: 5px 0;
         }
@@ -112,19 +112,19 @@
 
     <div>
         <h2>🎲 KohiGameBot Kniffel</h2>
-        <div class="info-text" id="statusText">Drücke auf den Becher oder den Button zum Würfeln!</div>
+        <div class="info-text" id="statusText">Tippe auf den Becher zum Würfeln!</div>
     </div>
     
     <!-- Der echte Würfelbecher -->
     <div id="cup" class="cup-container" onclick="rollDice()">🎲</div>
     
-    <!-- Die 5 Würfel -->
+    <!-- Die 5 Würfel (Starten direkt mit echten Zahlen statt Fragezeichen) -->
     <div class="dice-container" id="diceContainer">
-        <div class="die locked" onclick="toggleLock(0)">❓</div>
-        <div class="die locked" onclick="toggleLock(1)">❓</div>
-        <div class="die locked" onclick="toggleLock(2)">❓</div>
-        <div class="die locked" onclick="toggleLock(3)">❓</div>
-        <div class="die locked" onclick="toggleLock(4)">❓</div>
+        <div class="die" onclick="toggleLock(0)">⚀</div>
+        <div class="die" onclick="toggleLock(1)">⚁</div>
+        <div class="die" onclick="toggleLock(2)">⚂</div>
+        <div class="die" onclick="toggleLock(3)">⚃</div>
+        <div class="die" onclick="toggleLock(4)">⚄</div>
     </div>
 
     <div>
@@ -137,7 +137,7 @@
         tg.expand();
 
         const faces = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
-        let diceValues = [1, 1, 1, 1, 1];
+        let diceValues = [1, 2, 3, 4, 5];
         let locked = [false, false, false, false, false];
         let rollsLeft = 3;
         let hasRolled = false;
@@ -159,17 +159,13 @@
                 cup.classList.remove("shaking");
                 
                 for (let i = 0; i < 5; i++) {
-                    if (!locked[i] || !hasRolled) {
+                    if (!locked[i]) {
                         diceValues[i] = Math.floor(Math.random() * 6) + 1;
                     }
                 }
 
                 hasRolled = true;
                 rollsLeft--;
-                
-                if (rollsLeft === 2) {
-                    locked = [false, false, false, false, false];
-                }
 
                 renderDice();
                 document.getElementById("actionBtn").disabled = false;
