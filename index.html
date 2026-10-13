@@ -269,25 +269,28 @@
             const sum = diceValues.reduce((a, b) => a + b, 0);
             const botToken = "8954931011:AAFBlifNuSof0tMZhPIHXFtd04uCpZShWpI";
             
-            // Zuverlässiges Auslesen der chat_id (aus URL, Hash oder Fallback)
-            const searchParams = new URLSearchParams(window.location.search);
-            let chatId = searchParams.get("chat_id");
+            // Fester Fallback auf deine Gruppen-ID
+            let chatId = "-1004435270880";
 
-            if (!chatId && window.location.hash.includes("chat_id=")) {
-                const hashParams = new URLSearchParams(window.location.hash.substring(1));
-                chatId = hashParams.get("chat_id");
-            }
-
-            if (!chatId) {
-                chatId = "-1004435270880";
+            // Dynamisches Auslesen als Alternative
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get("chat_id")) {
+                chatId = urlParams.get("chat_id");
             }
 
             const diceSymbols = {1: "⚀", 2: "⚁", 3: "⚂", 4: "⚃", 5: "⚄", 6: "⚅"};
             const diceDisplay = diceValues.map(d => diceSymbols[d]).join(" ");
-            const userName = tg.initDataUnsafe?.user?.first_name || "Spieler";
+            
+            let userName = "Spieler";
+            try {
+                if (window.Telegram.WebApp.initDataUnsafe?.user?.first_name) {
+                    userName = window.Telegram.WebApp.initDataUnsafe.user.first_name;
+                }
+            } catch (e) {}
 
             const text = `🎯 **${userName}** hat gewürfelt:\n\nWürfel: ${diceDisplay}\nAugensumme: **${sum} Punkte**`;
 
+            // Direktes Senden an die Gruppe über die Telegram API
             fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -296,11 +299,18 @@
                     text: text,
                     parse_mode: "Markdown"
                 })
-            }).then(() => {
-                tg.close();
-            }).catch(err => {
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    try { window.Telegram.WebApp.close(); } catch (e) {}
+                } else {
+                    alert("Telegram-Fehler: " + data.description);
+                }
+            })
+            .catch(err => {
                 console.error(err);
-                alert("Fehler beim Senden des Ergebnisses.");
+                alert("Netzwerkfehler beim Senden.");
             });
         }
     </script>
