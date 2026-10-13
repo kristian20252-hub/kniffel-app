@@ -12,87 +12,63 @@
             font-family: 'Georgia', serif;
             text-align: center;
             margin: 0;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            height: 92vh;
+            padding: 10px;
             box-sizing: border-box;
         }
         
         h2 { 
             margin: 5px 0; 
             color: #d4af37; 
-            font-size: 22px;
+            font-size: 20px;
             letter-spacing: 1px;
         }
 
         .butler-container {
-            position: relative;
-            margin: 5px auto;
             display: flex;
-            flex-direction: column;
             align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 5px auto;
         }
 
         .speech-bubble {
             background: #ffffff;
             color: #2c3e50;
-            padding: 10px 14px;
-            border-radius: 16px;
-            font-size: 13px;
+            padding: 8px 12px;
+            border-radius: 14px;
+            font-size: 12px;
             font-family: 'Segoe UI', Tahoma, sans-serif;
             font-weight: 600;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-            margin-bottom: 10px;
-            max-width: 270px;
-            position: relative;
-        }
-
-        .speech-bubble::after {
-            content: '';
-            position: absolute;
-            bottom: -7px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-width: 7px 7px 0;
-            border-style: solid;
-            border-color: #ffffff transparent;
-            display: block;
-            width: 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            max-width: 220px;
+            text-align: left;
         }
 
         .butler-avatar {
-            font-size: 55px;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));
-            transition: transform 0.3s ease;
+            font-size: 45px;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.6));
+        }
+
+        .game-area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 8px 0;
         }
 
         .cup-container {
-            width: 80px;
-            height: 105px;
+            width: 50px;
+            height: 70px;
             background: linear-gradient(135deg, #703812, #3b1d07);
-            margin: 10px auto;
-            border-radius: 6px 6px 30px 30px;
-            box-shadow: inset 0 6px 10px rgba(255,255,255,0.25), 0 8px 16px rgba(0,0,0,0.6);
+            border-radius: 4px 4px 20px 20px;
+            box-shadow: inset 0 4px 8px rgba(255,255,255,0.2), 0 4px 8px rgba(0,0,0,0.5);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 30px;
+            font-size: 22px;
             cursor: pointer;
-            border: 3px solid #231104;
-            position: relative;
-        }
-
-        .cup-container::before {
-            content: '';
-            position: absolute;
-            top: -6px;
-            width: 86px;
-            height: 14px;
-            background: #8b4513;
-            border-radius: 50%;
-            border: 3px solid #231104;
+            border: 2px solid #231104;
         }
 
         .shaking {
@@ -101,32 +77,31 @@
 
         @keyframes shake {
             0% { transform: translate(0, 0) rotate(0deg); }
-            20% { transform: translate(-12px, 4px) rotate(-12deg); }
-            40% { transform: translate(12px, -4px) rotate(12deg); }
-            60% { transform: translate(-8px, 4px) rotate(-8deg); }
-            80% { transform: translate(8px, -4px) rotate(8deg); }
+            20% { transform: translate(-8px, 2px) rotate(-10deg); }
+            40% { transform: translate(8px, -2px) rotate(10deg); }
+            60% { transform: translate(-6px, 2px) rotate(-6deg); }
+            80% { transform: translate(6px, -2px) rotate(6deg); }
             100% { transform: translate(0, 0) rotate(0deg); }
         }
 
         .dice-container {
             display: flex;
             justify-content: center;
-            gap: 8px;
-            margin: 10px 0;
+            gap: 6px;
         }
 
         .die {
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             background: #ffffff;
             color: #161622;
-            font-size: 28px;
+            font-size: 22px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 10px;
+            border-radius: 8px;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.4);
             user-select: none;
             transition: transform 0.2s, background-color 0.2s, color 0.2s;
         }
@@ -134,12 +109,12 @@
         .die.locked {
             background: #c0392b;
             color: #ffffff;
-            transform: translateY(-6px);
-            box-shadow: 0 6px 12px rgba(192, 57, 43, 0.5);
+            transform: translateY(-4px);
+            box-shadow: 0 4px 10px rgba(192, 57, 43, 0.5);
         }
 
         .info-text {
-            font-size: 13px;
+            font-size: 12px;
             color: #a0a5b5;
             font-family: 'Segoe UI', Tahoma, sans-serif;
             margin: 4px 0;
@@ -149,19 +124,69 @@
             background: linear-gradient(135deg, #d4af37, #aa820a);
             color: #161622;
             border: none;
-            padding: 12px 20px;
-            font-size: 16px;
-            border-radius: 10px;
+            padding: 8px 16px;
+            font-size: 14px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
             font-family: 'Segoe UI', Tahoma, sans-serif;
-            box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
-            width: 100%;
-            margin-top: 5px;
+            box-shadow: 0 3px 8px rgba(212, 175, 55, 0.3);
+            margin: 5px 0;
         }
 
         .btn:active { background: #aa820a; }
         .btn:disabled { background: #4a4d5a; color: #888; cursor: not-allowed; box-shadow: none; }
+
+        /* Wertungsblock Tabelle */
+        .scoreboard {
+            width: 100%;
+            max-width: 350px;
+            margin: 5px auto;
+            border-collapse: collapse;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            font-size: 11px;
+            background: #1e1e2f;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .scoreboard th, .scoreboard td {
+            padding: 4px 8px;
+            border-bottom: 1px solid #2a2a40;
+            text-align: left;
+        }
+
+        .scoreboard th {
+            background: #282845;
+            color: #d4af37;
+            text-align: center;
+        }
+
+        .scoreboard td:last-child {
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .category-row {
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .category-row:hover {
+            background: #2e2e4a;
+        }
+
+        .category-row.filled {
+            color: #6c757d;
+            cursor: not-allowed;
+            background: #171722;
+        }
+
+        .potential-score {
+            color: #d4af37;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -171,24 +196,50 @@
     </div>
     
     <div class="butler-container">
-        <div class="speech-bubble" id="dialogue">Sehr wohl, der Herr! Ich habe den Becher für Sie bereitgestellt.</div>
         <div class="butler-avatar" id="butler">🤵‍♂️</div>
+        <div class="speech-bubble" id="dialogue">Würfeln Sie bis zu 3 Mal und wählen Sie eine Kategorie auf der Tafel.</div>
     </div>
 
-    <div id="cup" class="cup-container" onclick="rollDice()">🎲</div>
-    
-    <div class="dice-container" id="diceContainer">
-        <div class="die" onclick="toggleLock(0)">⚀</div>
-        <div class="die" onclick="toggleLock(1)">⚁</div>
-        <div class="die" onclick="toggleLock(2)">⚂</div>
-        <div class="die" onclick="toggleLock(3)">⚃</div>
-        <div class="die" onclick="toggleLock(4)">⚄</div>
+    <div class="game-area">
+        <div id="cup" class="cup-container" onclick="rollDice()">🎲</div>
+        <div>
+            <div class="dice-container" id="diceContainer">
+                <div class="die" onclick="toggleLock(0)">⚀</div>
+                <div class="die" onclick="toggleLock(1)">⚁</div>
+                <div class="die" onclick="toggleLock(2)">⚂</div>
+                <div class="die" onclick="toggleLock(3)">⚃</div>
+                <div class="die" onclick="toggleLock(4)">⚄</div>
+            </div>
+            <div class="info-text" id="rollsLeft">Verbleibende Würfe: 3</div>
+        </div>
     </div>
 
-    <div>
-        <div class="info-text" id="rollsLeft">Verbleibende Würfe: 3</div>
-        <button id="actionBtn" class="btn" onclick="rollDice()">Becher schütteln lassen</button>
-    </div>
+    <button id="actionBtn" class="btn" onclick="rollDice()">Becher schütteln lassen</button>
+
+    <!-- Kniffel Wertungsblock -->
+    <table class="scoreboard" id="scoreTable">
+        <thead>
+            <tr>
+                <th>Kategorie</th>
+                <th>Punkte</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="category-row" onclick="selectCategory('ones')" id="row-ones"><td>1er (Einser)</td><td id="score-ones">-</td></tr>
+            <tr class="category-row" onclick="selectCategory('twos')" id="row-twos"><td>2er (Zweier)</td><td id="score-twos">-</td></tr>
+            <tr class="category-row" onclick="selectCategory('threes')" id="row-threes"><td>3er (Dreier)</td><td id="score-threes">-</td></tr>
+            <tr class="category-row" onclick="selectCategory('fours')" id="row-fours"><td>4er (Vierer)</td><td id="score-fours">-</td></tr>
+            <tr class="category-row" onclick="selectCategory('fives')" id="row-fives"><td>5er (Fünfer)</td><td id="score-fives">-</td></tr>
+            <tr class="category-row" onclick="selectCategory('sixes')" id="row-sixes"><td>6er (Sechser)</td><td id="score-sixes">-</td></tr>
+            <tr class="category-row" onclick="selectCategory('threeOfAKind')" id="row-threeOfAKind"><td>3er-Pasch (alle Augen)</td><td id="score-threeOfAKind">-</td></tr>
+            <tr class="category-row" onclick="selectCategory('fourOfAKind')" id="row-fourOfAKind"><td>4er-Pasch (alle Augen)</td><td id="score-fourOfAKind">-</td></tr>
+            <tr class="category-row" onclick="selectCategory('fullHouse')" id="row-fullHouse"><td>Full House (25 Pkt)</td><td id="score-fullHouse">-</td></tr>
+            <tr class="category-row" onclick="selectCategory('smallStraight')" id="row-smallStraight"><td>Kleine Straße (30 Pkt)</td><td id="score-smallStraight">-</td></tr>
+            <tr class="category-row" onclick="selectCategory('largeStraight')" id="row-largeStraight"><td>Große Straße (40 Pkt)</td><td id="score-largeStraight">-</td></tr>
+            <tr class="category-row" onclick="selectCategory('kniffel')" id="row-kniffel"><td>Kniffel (50 Pkt)</td><td id="score-kniffel">-</td></tr>
+            <tr class="category-row" onclick="selectCategory('chance')" id="row-chance"><td>Chance (Summe)</td><td id="score-chance">-</td></tr>
+        </tbody>
+    </table>
 
     <script>
         const tg = window.Telegram.WebApp;
@@ -199,22 +250,23 @@
         let locked = [false, false, false, false, false];
         let rollsLeft = 3;
         let hasRolled = false;
+        let turnFinished = false;
+
+        // Speicher für eingetragene Punkte
+        let scores = {
+            ones: null, twos: null, threes: null, fours: null, fives: null, sixes: null,
+            threeOfAKind: null, fourOfAKind: null, fullHouse: null, smallStraight: null,
+            largeStraight: null, kniffel: null, chance: null
+        };
 
         function toggleLock(index) {
-            if (!hasRolled || rollsLeft === 3) return;
+            if (!hasRolled || rollsLeft === 3 || turnFinished) return;
             locked[index] = !locked[index];
-            
-            if (locked[index]) {
-                document.getElementById("dialogue").innerText = "Sehr wohl, diesen Würfel lege ich auf das Silbertablett.";
-            } else {
-                document.getElementById("dialogue").innerText = "Wie Sie wünschen, dieser Würfel wandert zurück in den Becher.";
-            }
-
             renderDice();
         }
 
         function rollDice() {
-            if (rollsLeft <= 0) return;
+            if (rollsLeft <= 0 || turnFinished) return;
 
             const cup = document.getElementById("cup");
             const butler = document.getElementById("butler");
@@ -222,7 +274,7 @@
             cup.classList.add("shaking");
             butler.style.transform = "scale(1.1)";
             document.getElementById("actionBtn").disabled = true;
-            document.getElementById("dialogue").innerText = "Ich schüttle den Becher für Sie...";
+            document.getElementById("dialogue").innerText = "Der Butler schüttelt den Becher...";
 
             setTimeout(() => {
                 cup.classList.remove("shaking");
@@ -238,19 +290,17 @@
                 rollsLeft--;
 
                 renderDice();
+                updatePotentialScores();
                 document.getElementById("actionBtn").disabled = false;
+                document.getElementById("rollsLeft").innerText = `Verbleibende Würfe: ${rollsLeft}`;
 
                 if (rollsLeft === 0) {
-                    document.getElementById("actionBtn").innerText = "Ergebnis der Gruppe präsentieren";
-                    document.getElementById("actionBtn").onclick = finishTurn;
-                    document.getElementById("dialogue").innerText = "Ausgezeichnet! Soll ich das Endergebnis übermitteln?";
+                    document.getElementById("actionBtn").disabled = true;
+                    document.getElementById("dialogue").innerText = "Keine Würfe mehr! Bitte wählen Sie eine Kategorie auf der Tafel.";
                 } else {
-                    document.getElementById("actionBtn").innerText = "Nochmals schütteln";
-                    document.getElementById("dialogue").innerText = "Tippen Sie auf die Würfel, die Sie halten möchten (rot).";
+                    document.getElementById("dialogue").innerText = "Tippen Sie auf Würfel zum Halten und wählen Sie links Ihre Kategorie.";
                 }
-                
-                document.getElementById("rollsLeft").innerText = `Verbleibende Würfe: ${rollsLeft}`;
-            }, 600);
+            }, 500);
         }
 
         function renderDice() {
@@ -265,22 +315,73 @@
             }
         }
 
-        function finishTurn() {
-            const sum = diceValues.reduce((a, b) => a + b, 0);
-            const botToken = "8954931011:AAFBlifNuSof0tMZhPIHXFtd04uCpZShWpI";
-            
-            // Fester Fallback auf deine Gruppen-ID
-            let chatId = "-1004435270880";
+        // Berechnet mögliche Punkte für Kategorien basierend auf aktuellen Würfeln
+        function calculateScore(category, dice) {
+            const counts = {};
+            dice.forEach(d => counts[d] = (counts[d] || 0) + 1);
+            const sum = dice.reduce((a, b) => a + b, 0);
 
-            // Dynamisches Auslesen als Alternative
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get("chat_id")) {
-                chatId = urlParams.get("chat_id");
+            switch(category) {
+                case 'ones': return (counts[1] || 0) * 1;
+                case 'twos': return (counts[2] || 0) * 2;
+                case 'threes': return (counts[3] || 0) * 3;
+                case 'fours': return (counts[4] || 0) * 4;
+                case 'fives': return (counts[5] || 0) * 5;
+                case 'sixes': return (counts[6] || 0) * 6;
+                case 'threeOfAKind': 
+                    return Object.values(counts).some(c => c >= 3) ? sum : 0;
+                case 'fourOfAKind': 
+                    return Object.values(counts).some(c => c >= 4) ? sum : 0;
+                case 'fullHouse':
+                    const values = Object.values(counts);
+                    return (values.includes(3) && values.includes(2)) || values.includes(5) ? 25 : 0;
+                case 'smallStraight':
+                    const unique = [...new Set(dice)].sort((a,b) => a-b).join("");
+                    return (unique.includes("1234") || unique.includes("2345") || unique.includes("3456")) ? 30 : 0;
+                case 'largeStraight':
+                    const uniqueL = [...new Set(dice)].sort((a,b) => a-b).join("");
+                    return (uniqueL === "12345" || uniqueL === "23456") ? 40 : 0;
+                case 'kniffel':
+                    return Object.values(counts).some(c => c >= 5) ? 50 : 0;
+                case 'chance':
+                    return sum;
+                default:
+                    return 0;
             }
+        }
 
-            const diceSymbols = {1: "⚀", 2: "⚁", 3: "⚂", 4: "⚃", 5: "⚄", 6: "⚅"};
-            const diceDisplay = diceValues.map(d => diceSymbols[d]).join(" ");
+        function updatePotentialScores() {
+            if (!hasRolled) return;
+            for (let cat in scores) {
+                if (scores[cat] === null) {
+                    const potential = calculateScore(cat, diceValues);
+                    document.getElementById(`score-${cat}`).innerText = potential;
+                    document.getElementById(`score-${cat}`).className = "potential-score";
+                }
+            }
+        }
+
+        function selectCategory(category) {
+            if (!hasRolled || scores[category] !== null || turnFinished) return;
+
+            const finalScore = calculateScore(category, diceValues);
+            scores[category] = finalScore;
+            turnFinished = true;
+
+            document.getElementById(`score-${category}`).innerText = finalScore;
+            document.getElementById(`score-${category}`).className = "";
+            document.getElementById(`row-${category}`).classList.add("filled");
+
+            document.getElementById("dialogue").innerText = `Ausgezeichnet! ${finalScore} Punkte eingetragen. Übermittle Ergebnis...`;
             
+            setTimeout(sendResultToGroup, 800);
+        }
+
+        function sendResultToGroup() {
+            const botToken = "8954931011:AAFBlifNuSof0tMZhPIHXFtd04uCpZShWpI";
+            const chatId = "-1004435270880";
+
+            const diceSymbols = diceValues.map(d => faces[d-1]).join(" ");
             let userName = "Spieler";
             try {
                 if (window.Telegram.WebApp.initDataUnsafe?.user?.first_name) {
@@ -288,9 +389,11 @@
                 }
             } catch (e) {}
 
-            const text = `🎯 **${userName}** hat gewürfelt:\n\nWürfel: ${diceDisplay}\nAugensumme: **${sum} Punkte**`;
+            // Gesamtsumme aller bisher eingetragenen Punkte berechnen
+            const totalScore = Object.values(scores).reduce((a, b) => a + (b || 0), 0);
 
-            // Direktes Senden an die Gruppe über die Telegram API
+            const text = `🎯 **${userName}** hat seinen Zug beendet:\n\n🎲 Letzte Würfel: ${diceSymbols}\n🏆 **Gesamtpunktzahl:** ${totalScore} Punkte`;
+
             fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
