@@ -269,13 +269,17 @@
             const sum = diceValues.reduce((a, b) => a + b, 0);
             const botToken = "8954931011:AAFBlifNuSof0tMZhPIHXFtd04uCpZShWpI";
             
-            // Liest die Chat-ID aus dem URL-Parameter (chat_id) oder aus tg.initDataUnsafe
-            const urlParams = new URLSearchParams(window.location.search);
-            const chatId = urlParams.get("chat_id") || tg.initDataUnsafe?.chat?.id || tg.initDataUnsafe?.user?.id;
+            // Zuverlässiges Auslesen der chat_id (aus URL, Hash oder Fallback)
+            const searchParams = new URLSearchParams(window.location.search);
+            let chatId = searchParams.get("chat_id");
+
+            if (!chatId && window.location.hash.includes("chat_id=")) {
+                const hashParams = new URLSearchParams(window.location.hash.substring(1));
+                chatId = hashParams.get("chat_id");
+            }
 
             if (!chatId) {
-                alert("Fehler: Chat-ID konnte nicht ermittelt werden.");
-                return;
+                chatId = "-1004435270880";
             }
 
             const diceSymbols = {1: "⚀", 2: "⚁", 3: "⚂", 4: "⚃", 5: "⚄", 6: "⚅"};
@@ -284,7 +288,6 @@
 
             const text = `🎯 **${userName}** hat gewürfelt:\n\nWürfel: ${diceDisplay}\nAugensumme: **${sum} Punkte**`;
 
-            // Direktes Senden der Nachricht an den Gruppenchat per API
             fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
