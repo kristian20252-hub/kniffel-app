@@ -27,7 +27,7 @@
             letter-spacing: 1px;
         }
 
-        /* Butler-Bereich mit dynamischer Sprechblase */
+        /* Butler & Sprechblase */
         .butler-container {
             position: relative;
             margin: 5px auto;
@@ -69,7 +69,7 @@
             transition: transform 0.3s ease;
         }
 
-        /* Eleganter Leder-Würfelbecher */
+        /* Würfelbecher aus Leder */
         .cup-container {
             width: 80px;
             height: 105px;
@@ -110,7 +110,7 @@
             100% { transform: translate(0, 0) rotate(0deg); }
         }
 
-        /* Die 5 Würfel */
+        /* 5 Würfel */
         .dice-container {
             display: flex;
             justify-content: center;
@@ -148,7 +148,7 @@
             margin: 4px 0;
         }
 
-        /* Edler Gold-Button */
+        /* Goldener Aktions-Button */
         .btn {
             background: linear-gradient(135deg, #d4af37, #aa820a);
             color: #161622;
@@ -174,7 +174,7 @@
         <h2>🤵 Sir James Salon</h2>
     </div>
     
-    <!-- Butler mit Sprechblase -->
+    <!-- Butler Bereich -->
     <div class="butler-container">
         <div class="speech-bubble" id="dialogue">Sehr wohl, der Herr! Ich habe den Becher für Sie bereitgestellt.</div>
         <div class="butler-avatar" id="butler">🤵‍♂️</div>
@@ -183,7 +183,7 @@
     <!-- Würfelbecher -->
     <div id="cup" class="cup-container" onclick="rollDice()">🎲</div>
     
-    <!-- Die 5 Würfel -->
+    <!-- Würfel -->
     <div class="dice-container" id="diceContainer">
         <div class="die" onclick="toggleLock(0)">⚀</div>
         <div class="die" onclick="toggleLock(1)">⚁</div>
