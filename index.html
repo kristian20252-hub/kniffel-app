@@ -282,7 +282,6 @@
             smallStraight: "Kleine Straße", largeStraight: "Große Straße", kniffel: "Kniffel", chance: "Chance"
         };
 
-        // Bisherige Werte beim Start laden
         window.onload = function() {
             renderStoredScores();
         };
@@ -427,7 +426,6 @@
             scores[category] = finalScore;
             turnFinished = true;
 
-            // In LocalStorage speichern
             localStorage.setItem("kniffel_scores", JSON.stringify(scores));
 
             document.getElementById(`score-${category}`).innerText = finalScore;
