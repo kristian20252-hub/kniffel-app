@@ -6,7 +6,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Sir James Kniffel Salon</title>
+    <title>Sir James Spiele Salon</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         body {
@@ -18,66 +18,48 @@
             padding: 10px;
             box-sizing: border-box;
         }
-        
-        h2 { 
-            margin: 5px 0; 
-            color: #d4af37; 
-            font-size: 20px;
-            letter-spacing: 1px;
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #d4af37;
+            padding-bottom: 5px;
+            margin-bottom: 8px;
+        }
+
+        h2 { margin: 0; color: #d4af37; font-size: 18px; letter-spacing: 1px; }
+
+        .menu-btn {
+            background: #282845; color: #d4af37; border: 1px solid #d4af37;
+            padding: 4px 8px; font-size: 11px; border-radius: 6px; cursor: pointer;
         }
 
         .butler-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin: 5px auto;
+            display: flex; align-items: center; justify-content: center;
+            gap: 10px; margin: 5px auto;
         }
 
         .speech-bubble {
-            background: #ffffff;
-            color: #2c3e50;
-            padding: 8px 12px;
-            border-radius: 14px;
-            font-size: 12px;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            font-weight: 600;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-            max-width: 220px;
-            text-align: left;
+            background: #ffffff; color: #2c3e50; padding: 8px 12px;
+            border-radius: 14px; font-size: 12px; font-family: 'Segoe UI', sans-serif;
+            font-weight: 600; box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            max-width: 220px; text-align: left;
         }
 
-        .butler-avatar {
-            font-size: 45px;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.6));
-        }
+        .butler-avatar { font-size: 40px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.6)); }
 
-        .game-area {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-            margin: 8px 0;
-        }
+        .game-section { display: none; }
+        .game-section.active { display: block; }
 
+        /* KNIFFEL STYLES */
+        .game-area { display: flex; justify-content: center; align-items: center; gap: 12px; margin: 8px 0; }
         .cup-container {
-            width: 50px;
-            height: 70px;
-            background: linear-gradient(135deg, #703812, #3b1d07);
-            border-radius: 4px 4px 20px 20px;
-            box-shadow: inset 0 4px 8px rgba(255,255,255,0.2), 0 4px 8px rgba(0,0,0,0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            cursor: pointer;
-            border: 2px solid #231104;
+            width: 50px; height: 70px; background: linear-gradient(135deg, #703812, #3b1d07);
+            border-radius: 4px 4px 20px 20px; display: flex; align-items: center;
+            justify-content: center; font-size: 22px; cursor: pointer; border: 2px solid #231104;
         }
-
-        .shaking {
-            animation: shake 0.5s ease infinite;
-        }
-
+        .shaking { animation: shake 0.5s ease infinite; }
         @keyframes shake {
             0% { transform: translate(0, 0) rotate(0deg); }
             20% { transform: translate(-8px, 2px) rotate(-10deg); }
@@ -87,184 +69,190 @@
             100% { transform: translate(0, 0) rotate(0deg); }
         }
 
-        .dice-container {
-            display: flex;
-            justify-content: center;
-            gap: 6px;
-        }
-
+        .dice-container { display: flex; justify-content: center; gap: 6px; }
         .die {
-            width: 40px;
-            height: 40px;
-            background: #ffffff;
-            color: #161622;
-            font-size: 22px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 8px;
-            cursor: pointer;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.4);
-            user-select: none;
-            transition: transform 0.2s, background-color 0.2s, color 0.2s;
+            width: 38px; height: 38px; background: #ffffff; color: #161622;
+            font-size: 20px; display: flex; align-items: center; justify-content: center;
+            border-radius: 8px; cursor: pointer;
         }
-
-        .die.locked {
-            background: #c0392b;
-            color: #ffffff;
-            transform: translateY(-4px);
-            box-shadow: 0 4px 10px rgba(192, 57, 43, 0.5);
-        }
-
-        .info-text {
-            font-size: 12px;
-            color: #a0a5b5;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            margin: 4px 0;
-        }
+        .die.locked { background: #c0392b; color: #ffffff; transform: translateY(-4px); }
 
         .btn {
             background: linear-gradient(135deg, #d4af37, #aa820a);
-            color: #161622;
-            border: none;
-            padding: 8px 16px;
-            font-size: 14px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            box-shadow: 0 3px 8px rgba(212, 175, 55, 0.3);
-            margin: 5px 0;
+            color: #161622; border: none; padding: 8px 16px; font-size: 13px;
+            border-radius: 8px; cursor: pointer; font-weight: bold; margin: 5px 0;
         }
-
-        .btn:active { background: #aa820a; }
-        .btn:disabled { background: #4a4d5a; color: #888; cursor: not-allowed; box-shadow: none; }
 
         .scoreboard {
-            width: 100%;
-            max-width: 360px;
-            margin: 5px auto;
-            border-collapse: collapse;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            font-size: 11px;
-            background: #1e1e2f;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            width: 100%; max-width: 360px; margin: 5px auto; border-collapse: collapse;
+            font-family: 'Segoe UI', sans-serif; font-size: 11px; background: #1e1e2f;
+            border-radius: 8px; overflow: hidden;
+        }
+        .scoreboard th, .scoreboard td { padding: 4px 8px; border-bottom: 1px solid #2a2a40; text-align: left; }
+        .scoreboard th { background: #282845; color: #d4af37; text-align: center; }
+        .scoreboard tr.summary-row { background: #25253e; font-weight: bold; color: #d4af37; }
+        .scoreboard td:last-child { text-align: center; font-weight: bold; }
+        .category-row { cursor: pointer; }
+        .category-row.filled { color: #8a8f9d; cursor: not-allowed; background: #171722; }
+        .potential-score { color: #d4af37; font-style: italic; }
+
+        /* TIC TAC TOE STYLES */
+        .ttt-board { display: grid; grid-template-columns: repeat(3, 70px); gap: 8px; justify-content: center; margin: 15px auto; }
+        .ttt-cell {
+            width: 70px; height: 70px; background: #282845; border-radius: 8px;
+            font-size: 32px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: #d4af37;
         }
 
-        .scoreboard th, .scoreboard td {
-            padding: 4px 8px;
-            border-bottom: 1px solid #2a2a40;
-            text-align: left;
-        }
-
-        .scoreboard th {
-            background: #282845;
-            color: #d4af37;
-            text-align: center;
-        }
-
-        .scoreboard tr.summary-row {
-            background: #25253e;
-            font-weight: bold;
-            color: #d4af37;
-        }
-
-        .scoreboard td:last-child {
-            text-align: center;
-            font-weight: bold;
-        }
-
-        .category-row {
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .category-row:hover {
-            background: #2e2e4a;
-        }
-
-        .category-row.filled {
-            color: #8a8f9d;
-            cursor: not-allowed;
-            background: #171722;
-        }
-
-        .potential-score {
-            color: #d4af37;
-            font-style: italic;
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .menu-card {
+            background: #25253e; border: 1px solid #d4af37; border-radius: 8px;
+            padding: 12px; cursor: pointer; text-align: center; color: #f8f9fa;
+            font-family: 'Segoe UI', sans-serif; font-size: 13px; font-weight: bold;
         }
     </style>
 </head>
 <body>
 
-    <div>
-        <h2>🤵 Sir James Salon</h2>
-    </div>
-    
-    <div class="butler-container">
-        <div class="butler-avatar" id="butler">🤵‍♂️</div>
-        <div class="speech-bubble" id="dialogue">Würfeln Sie bis zu 3 Mal und wählen Sie eine freie Kategorie auf dem Zettel.</div>
+    <div class="header">
+        <h2 id="appTitle">🤵 Sir James Salon</h2>
+        <button class="menu-btn" onclick="switchGame('hub')">📱 Alle Spiele</button>
     </div>
 
-    <div class="game-area">
-        <div id="cup" class="cup-container" onclick="rollDice()">🎲</div>
-        <div>
-            <div class="dice-container" id="diceContainer">
-                <div class="die" onclick="toggleLock(0)">⚀</div>
-                <div class="die" onclick="toggleLock(1)">⚁</div>
-                <div class="die" onclick="toggleLock(2)">⚂</div>
-                <div class="die" onclick="toggleLock(3)">⚃</div>
-                <div class="die" onclick="toggleLock(4)">⚄</div>
-            </div>
-            <div class="info-text" id="rollsLeft">Verbleibende Würfe: 3</div>
+    <div class="butler-container">
+        <div class="butler-avatar" id="butler">🤵‍♂️</div>
+        <div class="speech-bubble" id="dialogue">Willkommen im Salon! Womit darf Sir James aufwarten?</div>
+    </div>
+
+    <!-- MAIN HUB -->
+    <div id="sec-hub" class="game-section">
+        <div class="menu-grid">
+            <div class="menu-card" onclick="switchGame('kniffel')">🎲 Kniffel</div>
+            <div class="menu-card" onclick="switchGame('tictactoe')">❌⭕ Tic-Tac-Toe</div>
+            <div class="menu-card" onclick="switchGame('maumau')">🃏 Mau-Mau</div>
+            <div class="menu-card" onclick="switchGame('uno')">🔴🟡 UNO</div>
+            <div class="menu-card" onclick="switchGame('blackjack')">🎰 Blackjack</div>
+            <div class="menu-card" onclick="switchGame('maedge')">🔴 Mensch ärgere dich</div>
+            <div class="menu-card" onclick="switchGame('schiffe')">🚢 Schiffe versenken</div>
+            <div class="menu-card" onclick="switchGame('maexchen')">🎲 Mäxchen</div>
+            <div class="menu-card" onclick="switchGame('quiz')">🧠 Quiz & Wordle</div>
         </div>
     </div>
 
-    <button id="actionBtn" class="btn" onclick="rollDice()">Becher schütteln lassen</button>
+    <!-- KNIFFEL SECTION -->
+    <div id="sec-kniffel" class="game-section">
+        <div class="game-area">
+            <div id="cup" class="cup-container" onclick="rollDice()">🎲</div>
+            <div>
+                <div class="dice-container" id="diceContainer">
+                    <div class="die" onclick="toggleLock(0)">⚀</div>
+                    <div class="die" onclick="toggleLock(1)">⚁</div>
+                    <div class="die" onclick="toggleLock(2)">⚂</div>
+                    <div class="die" onclick="toggleLock(3)">⚃</div>
+                    <div class="die" onclick="toggleLock(4)">⚄</div>
+                </div>
+                <div style="font-size: 11px; color: #a0a5b5; margin-top: 4px;" id="rollsLeft">Verbleibende Würfe: 3</div>
+            </div>
+        </div>
+        <button id="actionBtn" class="btn" onclick="rollDice()">Becher schütteln</button>
 
-    <!-- Kniffel Spielzettel -->
-    <table class="scoreboard" id="scoreTable">
-        <thead>
-            <tr>
-                <th>Oberer Teil</th>
-                <th>Punkte</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="category-row" onclick="selectCategory('ones')" id="row-ones"><td>1er (Einser)</td><td id="score-ones">-</td></tr>
-            <tr class="category-row" onclick="selectCategory('twos')" id="row-twos"><td>2er (Zweier)</td><td id="score-twos">-</td></tr>
-            <tr class="category-row" onclick="selectCategory('threes')" id="row-threes"><td>3er (Dreier)</td><td id="score-threes">-</td></tr>
-            <tr class="category-row" onclick="selectCategory('fours')" id="row-fours"><td>4er (Vierer)</td><td id="score-fours">-</td></tr>
-            <tr class="category-row" onclick="selectCategory('fives')" id="row-fives"><td>5er (Fünfer)</td><td id="score-fives">-</td></tr>
-            <tr class="category-row" onclick="selectCategory('sixes')" id="row-sixes"><td>6er (Sechser)</td><td id="score-sixes">-</td></tr>
-            <tr class="summary-row"><td>Bonus (bei ≥63 Pkt: +35)</td><td id="score-bonus">0</td></tr>
-            <tr class="summary-row"><td>Summe Oberer Teil</td><td id="score-upperTotal">0</td></tr>
-        </tbody>
-        <thead>
-            <tr>
-                <th>Unterer Teil</th>
-                <th>Punkte</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="category-row" onclick="selectCategory('threeOfAKind')" id="row-threeOfAKind"><td>3er-Pasch (alle Augen)</td><td id="score-threeOfAKind">-</td></tr>
-            <tr class="category-row" onclick="selectCategory('fourOfAKind')" id="row-fourOfAKind"><td>4er-Pasch (alle Augen)</td><td id="score-fourOfAKind">-</td></tr>
-            <tr class="category-row" onclick="selectCategory('fullHouse')" id="row-fullHouse"><td>Full House (25 Pkt)</td><td id="score-fullHouse">-</td></tr>
-            <tr class="category-row" onclick="selectCategory('smallStraight')" id="row-smallStraight"><td>Kleine Straße (30 Pkt)</td><td id="score-smallStraight">-</td></tr>
-            <tr class="category-row" onclick="selectCategory('largeStraight')" id="row-largeStraight"><td>Große Straße (40 Pkt)</td><td id="score-largeStraight">-</td></tr>
-            <tr class="category-row" onclick="selectCategory('kniffel')" id="row-kniffel"><td>Kniffel (50 Pkt)</td><td id="score-kniffel">-</td></tr>
-            <tr class="category-row" onclick="selectCategory('chance')" id="row-chance"><td>Chance (alle Augen)</td><td id="score-chance">-</td></tr>
-            <tr class="summary-row"><td>Summe Unterer Teil</td><td id="score-lowerTotal">0</td></tr>
-            <tr class="summary-row" style="background:#1b3820; color:#d4af37;"><td>GESAMTSUMME</td><td id="score-grandTotal">0</td></tr>
-        </tbody>
-    </table>
+        <table class="scoreboard">
+            <thead><tr><th>Oberer Teil</th><th>Punkte</th></tr></thead>
+            <tbody>
+                <tr class="category-row" onclick="selectCategory('ones')" id="row-ones"><td>1er (Einser)</td><td id="score-ones">-</td></tr>
+                <tr class="category-row" onclick="selectCategory('twos')" id="row-twos"><td>2er (Zweier)</td><td id="score-twos">-</td></tr>
+                <tr class="category-row" onclick="selectCategory('threes')" id="row-threes"><td>3er (Dreier)</td><td id="score-threes">-</td></tr>
+                <tr class="category-row" onclick="selectCategory('fours')" id="row-fours"><td>4er (Vierer)</td><td id="score-fours">-</td></tr>
+                <tr class="category-row" onclick="selectCategory('fives')" id="row-fives"><td>5er (Fünfer)</td><td id="score-fives">-</td></tr>
+                <tr class="category-row" onclick="selectCategory('sixes')" id="row-sixes"><td>6er (Sechser)</td><td id="score-sixes">-</td></tr>
+                <tr class="summary-row"><td>Bonus (≥63 Pkt: +35)</td><td id="score-bonus">0</td></tr>
+                <tr class="summary-row"><td>Summe Oberer Teil</td><td id="score-upperTotal">0</td></tr>
+            </tbody>
+            <thead><tr><th>Unterer Teil</th><th>Punkte</th></tr></thead>
+            <tbody>
+                <tr class="category-row" onclick="selectCategory('threeOfAKind')" id="row-threeOfAKind"><td>3er-Pasch</td><td id="score-threeOfAKind">-</td></tr>
+                <tr class="category-row" onclick="selectCategory('fourOfAKind')" id="row-fourOfAKind"><td>4er-Pasch</td><td id="score-fourOfAKind">-</td></tr>
+                <tr class="category-row" onclick="selectCategory('fullHouse')" id="row-fullHouse"><td>Full House (25)</td><td id="score-fullHouse">-</td></tr>
+                <tr class="category-row" onclick="selectCategory('smallStraight')" id="row-smallStraight"><td>Kl. Straße (30)</td><td id="score-smallStraight">-</td></tr>
+                <tr class="category-row" onclick="selectCategory('largeStraight')" id="row-largeStraight"><td>Gr. Straße (40)</td><td id="score-largeStraight">-</td></tr>
+                <tr class="category-row" onclick="selectCategory('kniffel')" id="row-kniffel"><td>Kniffel (50)</td><td id="score-kniffel">-</td></tr>
+                <tr class="category-row" onclick="selectCategory('chance')" id="row-chance"><td>Chance</td><td id="score-chance">-</td></tr>
+                <tr class="summary-row" style="background:#1b3820;"><td>GESAMTSUMME</td><td id="score-grandTotal">0</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- TIC TAC TOE SECTION -->
+    <div id="sec-tictactoe" class="game-section">
+        <div class="ttt-board" id="tttBoard">
+            <div class="ttt-cell" onclick="makeTTTMove(0)"></div>
+            <div class="ttt-cell" onclick="makeTTTMove(1)"></div>
+            <div class="ttt-cell" onclick="makeTTTMove(2)"></div>
+            <div class="ttt-cell" onclick="makeTTTMove(3)"></div>
+            <div class="ttt-cell" onclick="makeTTTMove(4)"></div>
+            <div class="ttt-cell" onclick="makeTTTMove(5)"></div>
+            <div class="ttt-cell" onclick="makeTTTMove(6)"></div>
+            <div class="ttt-cell" onclick="makeTTTMove(7)"></div>
+            <div class="ttt-cell" onclick="makeTTTMove(8)"></div>
+        </div>
+        <button class="btn" onclick="resetTTT()">Neues Spiel</button>
+    </div>
+
+    <!-- GENERIC GAME SECTION -->
+    <div id="sec-generic" class="game-section">
+        <div style="background: #25253e; padding: 20px; border-radius: 8px; margin-top: 15px;">
+            <p id="genericText">Der Tisch wird für Sie vorbereitet...</p>
+            <button class="btn" onclick="sendGenericResult()">Ergebnis übermitteln</button>
+        </div>
+    </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
+        const botToken = "8954931011:AAFBlifNuSof0tMZhPIHXFtd04uCpZShWpI";
+
+        // DYNAMISCHES AUSLESEN VON KATEGORIE & CHAT_ID
+        const urlParams = new URLSearchParams(window.location.search);
+        let currentGame = urlParams.get('game') || 'kniffel';
+        
+        // Liest dynamisch die Chat-ID aus – funktioniert für jede Gruppe & den privaten Chat!
+        let targetChatId = urlParams.get('chat_id') || (window.Telegram.WebApp.initDataUnsafe?.chat?.id) || (window.Telegram.WebApp.initDataUnsafe?.user?.id);
+
+        window.onload = function() {
+            switchGame(currentGame);
+            renderStoredScores();
+        };
+
+        function switchGame(gameKey) {
+            currentGame = gameKey;
+            document.querySelectorAll('.game-section').forEach(sec => sec.classList.remove('active'));
+            
+            const titles = {
+                kniffel: "🎲 Kniffel Salon", tictactoe: "❌⭕ Tic-Tac-Toe", maumau: "🃏 Mau-Mau",
+                uno: "🔴🟡 UNO", blackjack: "🎰 Blackjack", maedge: "🔴 Mensch ärgere dich",
+                schiffe: "🚢 Schiffe versenken", maexchen: "🎲 Mäxchen", quiz: "🧠 Quiz Salon", hub: "📱 Spiele Hub"
+            };
+
+            document.getElementById("appTitle").innerText = titles[gameKey] || "Sir James Salon";
+
+            if (gameKey === 'kniffel') {
+                document.getElementById('sec-kniffel').classList.add('active');
+                document.getElementById('dialogue').innerText = "Würfeln Sie bis zu 3 Mal und wählen Sie ein Feld.";
+            } else if (gameKey === 'tictactoe') {
+                document.getElementById('sec-tictactoe').classList.add('active');
+                document.getElementById('dialogue').innerText = "Setzen Sie Ihr Zeichen (X oder O) auf das Feld.";
+            } else if (gameKey === 'hub') {
+                document.getElementById('sec-hub').classList.add('active');
+                document.getElementById('dialogue').innerText = "Wählen Sie ein Spiel aus der Übersicht.";
+            } else {
+                document.getElementById('sec-generic').classList.add('active');
+                document.getElementById('genericText').innerText = `Sir James richtet den Tisch für ${titles[gameKey]} her...`;
+                document.getElementById('dialogue').innerText = `Willkommen im Salon für ${titles[gameKey]}!`;
+            }
+        }
+
+        /* KNIFFEL LOGIK */
         const faces = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
         let diceValues = [1, 2, 3, 4, 5];
         let locked = [false, false, false, false, false];
@@ -272,7 +260,7 @@
         let hasRolled = false;
         let turnFinished = false;
 
-        let scores = JSON.parse(localStorage.getItem("kniffel_scores_v5")) || {
+        let scores = JSON.parse(localStorage.getItem("kniffel_scores_v7")) || {
             ones: null, twos: null, threes: null, fours: null, fives: null, sixes: null,
             threeOfAKind: null, fourOfAKind: null, fullHouse: null, smallStraight: null,
             largeStraight: null, kniffel: null, chance: null
@@ -282,10 +270,6 @@
             ones: "1er", twos: "2er", threes: "3er", fours: "4er", fives: "5er", sixes: "6er",
             threeOfAKind: "3er-Pasch", fourOfAKind: "4er-Pasch", fullHouse: "Full House",
             smallStraight: "Kleine Straße", largeStraight: "Große Straße", kniffel: "Kniffel", chance: "Chance"
-        };
-
-        window.onload = function() {
-            renderStoredScores();
         };
 
         function renderStoredScores() {
@@ -298,48 +282,27 @@
             recalculateTotals();
         }
 
-        function toggleLock(index) {
+        function toggleLock(i) {
             if (!hasRolled || rollsLeft === 3 || turnFinished) return;
-            locked[index] = !locked[index];
+            locked[i] = !locked[i];
             renderDice();
         }
 
         function rollDice() {
             if (rollsLeft <= 0 || turnFinished) return;
-
-            const cup = document.getElementById("cup");
-            const butler = document.getElementById("butler");
-            
-            cup.classList.add("shaking");
-            butler.style.transform = "scale(1.1)";
+            document.getElementById("cup").classList.add("shaking");
             document.getElementById("actionBtn").disabled = true;
-            document.getElementById("dialogue").innerText = "Der Butler schüttelt den Becher...";
 
             setTimeout(() => {
-                cup.classList.remove("shaking");
-                butler.style.transform = "scale(1.0)";
-                
+                document.getElementById("cup").classList.remove("shaking");
                 for (let i = 0; i < 5; i++) {
-                    if (!locked[i]) {
-                        diceValues[i] = Math.floor(Math.random() * 6) + 1;
-                    }
+                    if (!locked[i]) diceValues[i] = Math.floor(Math.random() * 6) + 1;
                 }
-
-                hasRolled = true;
-                rollsLeft--;
-
-                renderDice();
-                updatePotentialScores();
+                hasRolled = true; rollsLeft--;
+                renderDice(); updatePotentialScores();
                 document.getElementById("actionBtn").disabled = false;
                 document.getElementById("rollsLeft").innerText = `Verbleibende Würfe: ${rollsLeft}`;
-
-                if (rollsLeft === 0) {
-                    document.getElementById("actionBtn").disabled = true;
-                    document.getElementById("dialogue").innerText = "Keine Würfe mehr! Bitte wählen Sie eine freie Kategorie auf dem Zettel.";
-                } else {
-                    document.getElementById("dialogue").innerText = "Tippen Sie auf Würfel zum Halten und wählen Sie eine Kategorie.";
-                }
-            }, 500);
+            }, 400);
         }
 
         function renderDice() {
@@ -366,25 +329,20 @@
                 case 'fours': return (counts[4] || 0) * 4;
                 case 'fives': return (counts[5] || 0) * 5;
                 case 'sixes': return (counts[6] || 0) * 6;
-                case 'threeOfAKind': 
-                    return Object.values(counts).some(c => c >= 3) ? sum : 0;
-                case 'fourOfAKind': 
-                    return Object.values(counts).some(c => c >= 4) ? sum : 0;
-                case 'fullHouse':
-                    const values = Object.values(counts);
-                    return (values.includes(3) && values.includes(2)) || values.includes(5) ? 25 : 0;
+                case 'threeOfAKind': return Object.values(counts).some(c => c >= 3) ? sum : 0;
+                case 'fourOfAKind': return Object.values(counts).some(c => c >= 4) ? sum : 0;
+                case 'fullHouse': 
+                    const v = Object.values(counts);
+                    return (v.includes(3) && v.includes(2)) || v.includes(5) ? 25 : 0;
                 case 'smallStraight':
-                    const unique = [...new Set(dice)].sort((a,b) => a-b).join("");
-                    return (unique.includes("1234") || unique.includes("2345") || unique.includes("3456")) ? 30 : 0;
+                    const u = [...new Set(dice)].sort((a,b) => a-b).join("");
+                    return (u.includes("1234") || u.includes("2345") || u.includes("3456")) ? 30 : 0;
                 case 'largeStraight':
-                    const uniqueL = [...new Set(dice)].sort((a,b) => a-b).join("");
-                    return (uniqueL === "12345" || uniqueL === "23456") ? 40 : 0;
-                case 'kniffel':
-                    return Object.values(counts).some(c => c >= 5) ? 50 : 0;
-                case 'chance':
-                    return sum;
-                default:
-                    return 0;
+                    const uL = [...new Set(dice)].sort((a,b) => a-b).join("");
+                    return (uL === "12345" || uL === "23456") ? 40 : 0;
+                case 'kniffel': return Object.values(counts).some(c => c >= 5) ? 50 : 0;
+                case 'chance': return sum;
+                default: return 0;
             }
         }
 
@@ -392,60 +350,77 @@
             if (!hasRolled) return;
             for (let cat in scores) {
                 if (scores[cat] === null) {
-                    const potential = calculateScore(cat, diceValues);
-                    document.getElementById(`score-${cat}`).innerText = potential;
+                    document.getElementById(`score-${cat}`).innerText = calculateScore(cat, diceValues);
                     document.getElementById(`score-${cat}`).className = "potential-score";
                 }
             }
         }
 
         function recalculateTotals() {
-            const upperCategories = ['ones', 'twos', 'threes', 'fours', 'fives', 'sixes'];
-            let upperSum = 0;
-            upperCategories.forEach(cat => upperSum += (scores[cat] || 0));
-
-            const bonus = upperSum >= 63 ? 35 : 0;
-            const upperTotal = upperSum + bonus;
-
-            const lowerCategories = ['threeOfAKind', 'fourOfAKind', 'fullHouse', 'smallStraight', 'largeStraight', 'kniffel', 'chance'];
-            let lowerTotal = 0;
-            lowerCategories.forEach(cat => lowerTotal += (scores[cat] || 0));
-
-            const grandTotal = upperTotal + lowerTotal;
-
+            let uSum = 0;
+            ['ones','twos','threes','fours','fives','sixes'].forEach(c => uSum += (scores[c] || 0));
+            const bonus = uSum >= 63 ? 35 : 0;
+            let lTotal = 0;
+            ['threeOfAKind','fourOfAKind','fullHouse','smallStraight','largeStraight','kniffel','chance'].forEach(c => lTotal += (scores[c] || 0));
+            
             document.getElementById('score-bonus').innerText = bonus;
-            document.getElementById('score-upperTotal').innerText = upperTotal;
-            document.getElementById('score-lowerTotal').innerText = lowerTotal;
-            document.getElementById('score-grandTotal').innerText = grandTotal;
-
-            return grandTotal;
+            document.getElementById('score-upperTotal').innerText = uSum + bonus;
+            document.getElementById('score-grandTotal').innerText = uSum + bonus + lTotal;
+            return uSum + bonus + lTotal;
         }
 
         function selectCategory(category) {
             if (!hasRolled || scores[category] !== null || turnFinished) return;
-
             const finalScore = calculateScore(category, diceValues);
             scores[category] = finalScore;
             turnFinished = true;
 
-            localStorage.setItem("kniffel_scores_v5", JSON.stringify(scores));
-
+            localStorage.setItem("kniffel_scores_v7", JSON.stringify(scores));
             document.getElementById(`score-${category}`).innerText = finalScore;
-            document.getElementById(`score-${category}`).className = "";
             document.getElementById(`row-${category}`).classList.add("filled");
 
             const grandTotal = recalculateTotals();
-
-            document.getElementById("dialogue").innerText = `Ausgezeichnet! ${finalScore} Pkt bei ${categoryNames[category]} eingetragen.`;
-            
-            setTimeout(() => sendResultToGroupV5(category, finalScore, grandTotal), 800);
+            sendResultToGroup(`🎲 **Kniffel**\n📌 **Kategorie:** ${categoryNames[category]} (${finalScore} Pkt)\n🏆 **Gesamtstand:** ${grandTotal} Pkt`);
         }
 
-        function sendResultToGroupV5(category, categoryScore, grandTotal) {
-            const botToken = "8954931011:AAFBlifNuSof0tMZhPIHXFtd04uCpZShWpI";
-            const chatId = "-1004435270880";
+        /* TIC TAC TOE LOGIK */
+        let tttBoardState = ["", "", "", "", "", "", "", "", ""];
+        let tttCurrentTurn = "❌";
 
-            const diceSymbols = diceValues.map(d => faces[d-1]).join(" ");
+        function makeTTTMove(index) {
+            if (tttBoardState[index] !== "") return;
+            tttBoardState[index] = tttCurrentTurn;
+            document.querySelectorAll('.ttt-cell')[index].innerText = tttCurrentTurn;
+
+            if (checkTTTWinner()) {
+                document.getElementById('dialogue').innerText = `Spieler ${tttCurrentTurn} gewinnt!`;
+                sendResultToGroup(`❌⭕ **Tic-Tac-Toe**\n🏆 **Sieger:** Spieler ${tttCurrentTurn}`);
+            } else {
+                tttCurrentTurn = tttCurrentTurn === "❌" ? "⭕" : "❌";
+                document.getElementById('dialogue').innerText = `Am Zug: ${tttCurrentTurn}`;
+            }
+        }
+
+        function checkTTTWinner() {
+            const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+            return wins.some(w => tttBoardState[w[0]] && tttBoardState[w[0]] === tttBoardState[w[1]] && tttBoardState[w[0]] === tttBoardState[w[2]]);
+        }
+
+        function resetTTT() {
+            tttBoardState = ["", "", "", "", "", "", "", "", ""];
+            document.querySelectorAll('.ttt-cell').forEach(c => c.innerText = "");
+            tttCurrentTurn = "❌";
+            document.getElementById('dialogue').innerText = "Neues Tic-Tac-Toe gestartet!";
+        }
+
+        function sendGenericResult() {
+            sendResultToGroup(`🎩 **${currentGame.toUpperCase()}**\nEin Zug wurde erfolgreich ausgeführt!`);
+        }
+
+        /* DYNAMISCHER VERSAND AN JEDE GRUPPE ODER PRIVATEN CHAT */
+        function sendResultToGroup(extraText) {
+            if (!targetChatId) return;
+
             let userName = "Spieler";
             try {
                 if (window.Telegram.WebApp.initDataUnsafe?.user?.first_name) {
@@ -453,31 +428,15 @@
                 }
             } catch (e) {}
 
-            const catName = categoryNames[category] || category;
-
-            const text = `🎯 **${userName}** hat seinen Spielzug beendet:\n\n🎲 Würfel: ${diceSymbols}\n📌 **Eingetragene Kategorie:** ${catName} (${categoryScore} Pkt)\n🏆 **Gesamtstand:** ${grandTotal} Punkte`;
+            const text = `🎯 **${userName}** hat gespielt:\n\n${extraText}`;
 
             fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    chat_id: chatId,
-                    text: text,
-                    parse_mode: "Markdown"
-                })
+                body: JSON.stringify({ chat_id: targetChatId, text: text, parse_mode: "Markdown" })
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.ok) {
-                    try { window.Telegram.WebApp.close(); } catch (e) {}
-                } else {
-                    alert("Telegram-Fehler: " + data.description);
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                alert("Netzwerkfehler beim Senden.");
-            });
+            .then(res => res.json())
+            .then(data => { if (data.ok) try { window.Telegram.WebApp.close(); } catch (e) {} });
         }
     </script>
 </body>
